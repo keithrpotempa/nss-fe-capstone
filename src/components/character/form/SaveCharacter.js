@@ -29,15 +29,6 @@ const SaveCharacter = props => {
     if (isEdit) {
       characterToSave.id = parseInt(props.match.params.characterId);
       characterToSave.created = character.created
-    } else {
-      // https://stackoverflow.com/questions/38768576/in-firebase-when-using-push-how-do-i-get-the-unique-id-and-store-in-my-databas/38776788
-
-      // IF its not an edit, its a save
-      // so we need to generate an id
-
-      // Getting a key (id) from firebase:
-      const id = firebase.database().ref('characters').push().key
-      characterToSave.id = id
     }
     return characterToSave;
   }
@@ -161,12 +152,22 @@ const SaveCharacter = props => {
   }
   
   // [x] New for Firebase
+  // https://stackoverflow.com/questions/38768576/in-firebase-when-using-push-how-do-i-get-the-unique-id-and-store-in-my-databas/38776788
+
   const saveCharacter = (char) => {
-    const charsRef = firebase.database().ref('characters')
-    charsRef.push(char)
+    if (isEdit) {
+      // FIXME: TO BUILD
+    } else {
+      // If its not an edit, its a save
+      // we need to get the id of the firebase reference
+      const charRef = firebase.database().ref('characters').push(char);
+      const id = charRef.key;
+      char.id = id
+    }
+    return char
   }
 
-
+  // [x] New for Firebase
   const saveAspects = (charId) => {
     aspects.forEach(aspect => {
       // This keeps blank aspects from being posted
@@ -180,9 +181,9 @@ const SaveCharacter = props => {
         // ApiManager.post("characterAspects", aspectToSave)
       } 
     })
-    return charId;
   }
 
+  // [ ] New for Firebase
   const saveSkills = (charId) => {
     for (const row in skills) {
       const skillsAtRating = skills[row]
@@ -199,9 +200,9 @@ const SaveCharacter = props => {
         })
       }
     }
-    return charId; 
   }
 
+  // [ ] New for Firebase
   const saveStunts = (charId) => {
     // Retrieving the firebase reference:
     const stuntsRef = firebase.database().ref('characterStunts')
@@ -217,7 +218,6 @@ const SaveCharacter = props => {
         // ApiManager.post("characterStunts", stuntToSave)
       }
     }  
-    return charId;
   }
 
 
@@ -230,10 +230,10 @@ const SaveCharacter = props => {
     if (validChar(char)) {
       setIsLoading(true);
       // TODO: SAVE CHARACTER?
-      saveCharacter(char);
-      saveAspects(char.id); // FIXME: NEED CHARACTER ID SOMEHOW
-      saveSkills(char.id);
-      saveStunts(char.id);
+      const charId = saveCharacter(char).id;
+      saveAspects(charId); // FIXME: NEED CHARACTER ID SOMEHOW
+      // saveSkills(charId);
+      // saveStunts(charId);
       props.history.push("/characters")
     }
   }
