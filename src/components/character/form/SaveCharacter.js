@@ -44,17 +44,19 @@ const SaveCharacter = props => {
 
   const constructSkill = (skill, rating, characterId) => {
     const skillToSave = {
-      characterId: parseInt(characterId),
-      skillId: parseInt(skill),
-      skillRating: parseInt(rating)
+      // NOTE: parseInt removed from these since Firebase uses alphanumeric keys
+      characterId: characterId,
+      skillId: skill,
+      skillRating: rating
     }
     return skillToSave;
   }
 
   const constructStunt = (stuntId, characterId) => {
     const stuntToSave = {
-      characterId: parseInt(characterId),
-      stuntId: parseInt(stuntId),
+      // NOTE: parseInt removed from these since Firebase uses alphanumeric keys
+      characterId: characterId,
+      stuntId: stuntId,
     }
     return stuntToSave;
   } 
@@ -183,16 +185,16 @@ const SaveCharacter = props => {
     })
   }
 
-  // [ ] New for Firebase
+  // [x] New for Firebase
   const saveSkills = (charId) => {
     for (const row in skills) {
       const skillsAtRating = skills[row]
       const rating = row
       if (skillsAtRating.length > 0) {
         // Retrieving the firebase reference:
-        const skillsRef = firebase.database().ref('characterSkills')
         skillsAtRating.forEach(skill => {
           const skillToSave = constructSkill(skill, rating, charId)
+          const skillsRef = firebase.database().ref('characterSkills')
           // Pushing the new data to firebase:
           skillsRef.push(skillToSave)
           // The pre-firebase JSON method 
@@ -229,11 +231,12 @@ const SaveCharacter = props => {
     const char = constructCharacter()
     if (validChar(char)) {
       setIsLoading(true);
-      // TODO: SAVE CHARACTER?
+      // Save character to firebase
+      // and store return key/id value for subsequent saves 
       const charId = saveCharacter(char).id;
-      saveAspects(charId); // FIXME: NEED CHARACTER ID SOMEHOW
-      // saveSkills(charId);
-      // saveStunts(charId);
+      saveAspects(charId);
+      saveSkills(charId);
+      saveStunts(charId);
       props.history.push("/characters")
     }
   }
