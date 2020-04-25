@@ -3,6 +3,7 @@ import { Button } from "semantic-ui-react";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; 
 import ApiManager from "../../../modules/ApiManager";
+import firebase from '../../../firebase';
 
 const SaveCharacter = props => {
   const character = props.character;
@@ -28,6 +29,15 @@ const SaveCharacter = props => {
     if (isEdit) {
       characterToSave.id = parseInt(props.match.params.characterId);
       characterToSave.created = character.created
+    } else {
+      // https://stackoverflow.com/questions/38768576/in-firebase-when-using-push-how-do-i-get-the-unique-id-and-store-in-my-databas/38776788
+
+      // IF its not an edit, its a save
+      // so we need to generate an id
+
+      // Getting a key (id) from firebase:
+      const id = firebase.database().ref('characters').push().key
+      characterToSave.id = id
     }
     return characterToSave;
   }
@@ -149,13 +159,25 @@ const SaveCharacter = props => {
       return character
     }
   }
+  
+  // [x] New for Firebase
+  const saveCharacter = (char) => {
+    const charsRef = firebase.database().ref('characters')
+    charsRef.push(char)
+  }
+
 
   const saveAspects = (charId) => {
     aspects.forEach(aspect => {
       // This keeps blank aspects from being posted
       if (aspect.name !== "") {
+        // Retrieving the firebase reference:
+        const aspectsRef = firebase.database().ref('characterAspects')
         const aspectToSave = constructAspect(aspect, charId)
-        ApiManager.post("characterAspects", aspectToSave)
+        // Pushing the new data to firebase:
+        aspectsRef.push(aspectToSave)
+        // The pre-firebase JSON method 
+        // ApiManager.post("characterAspects", aspectToSave)
       } 
     })
     return charId;
@@ -166,9 +188,14 @@ const SaveCharacter = props => {
       const skillsAtRating = skills[row]
       const rating = row
       if (skillsAtRating.length > 0) {
+        // Retrieving the firebase reference:
+        const skillsRef = firebase.database().ref('characterSkills')
         skillsAtRating.forEach(skill => {
           const skillToSave = constructSkill(skill, rating, charId)
-          ApiManager.post("characterSkills", skillToSave)
+          // Pushing the new data to firebase:
+          skillsRef.push(skillToSave)
+          // The pre-firebase JSON method 
+          // ApiManager.post("characterSkills", skillToSave)
         })
       }
     }
@@ -176,19 +203,42 @@ const SaveCharacter = props => {
   }
 
   const saveStunts = (charId) => {
+    // Retrieving the firebase reference:
+    const stuntsRef = firebase.database().ref('characterStunts')
     for (const row in stunts) {
       // Only build and post if there's 
       // actually a stunt selected on that row
       if (stunts[row]) {
         const stuntId = stunts[row]
         const stuntToSave = constructStunt(stuntId, charId)
-        ApiManager.post("characterStunts", stuntToSave)
+        // Pushing the new data to firebase:
+        stuntsRef.push(stuntToSave)
+        // The pre-firebase JSON method
+        // ApiManager.post("characterStunts", stuntToSave)
       }
     }  
     return charId;
   }
 
+
   /* ------------ SAVING ------------ */
+  // FIREBASE APPROACH
+  const handleSave = evt => {
+    evt.preventDefault();
+    // SAVING CHARACTER
+    const char = constructCharacter()
+    if (validChar(char)) {
+      setIsLoading(true);
+      // TODO: SAVE CHARACTER?
+      saveCharacter(char);
+      saveAspects(char.id); // FIXME: NEED CHARACTER ID SOMEHOW
+      saveSkills(char.id);
+      saveStunts(char.id);
+      props.history.push("/characters")
+    }
+  }
+
+  /* JSON server approach:
   const handleSave = evt => {
     evt.preventDefault();
     // SAVING CHARACTER
@@ -206,6 +256,7 @@ const SaveCharacter = props => {
         })
     }
   }
+  */
 
   // useEffect(() => {}, [])
 
