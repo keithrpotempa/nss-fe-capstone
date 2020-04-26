@@ -10,7 +10,14 @@ export default {
     // https://stackoverflow.com/questions/38768576/in-firebase-when-using-push-how-do-i-get-the-unique-id-and-store-in-my-databas/38776788
     return ref
   },
-
+  // firebaseGetAll(dataType) {
+  //   const ref = firebase.database().ref(dataType);
+  //   ref.on('value', (snapshot) => {
+  //     return snapshot.val();
+  //   })
+  //   console.log(resp)
+  //   return resp
+  // },
   // ---------------- JSON SERVER ----------------
   // TODO: Convert to Firebase approach
   get(dataType, id) {

@@ -3,6 +3,7 @@ import Paginator from "react-hooks-paginator";
 import { Card, Container } from "semantic-ui-react"
 import ApiManager from "../../modules/ApiManager";
 import SkillCard from "./SkillCard"
+// import firebase from "../../firebase"
 
 const SkillList = props => {
   const [skills, setSkills] = useState([]);
@@ -14,6 +15,15 @@ const SkillList = props => {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentData, setCurrentData] = useState([]);
 
+  // Failed attempt at firebase api get:
+  // const getSkills = () => {
+  //   // const skill_list = ApiManager.firebaseGetAll("skills")
+  //   const ref = firebase.database().ref("skills");
+  //   ref.on('value', (snapshot) => {
+  //     let skill_list = snapshot.val();
+  //     setSkills(skill_list)
+  //   })
+  // }
 
   const getSkills = () => {
     return ApiManager.getAll("skills")
