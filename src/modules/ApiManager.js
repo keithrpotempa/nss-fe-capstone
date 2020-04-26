@@ -1,70 +1,97 @@
-const remoteURL = "http://localhost:5002";
+import firebase from '../firebase'
+
+const jsonURL = "http://localhost:5002";
 
 export default {
+  // ---------------- FIREBASE ----------------
+  push(dataType, objectToPush) {
+    const ref = firebase.database().ref(dataType).push(objectToPush)
+    // It can be helpful to return the ref in order to get the key from it
+    // https://stackoverflow.com/questions/38768576/in-firebase-when-using-push-how-do-i-get-the-unique-id-and-store-in-my-databas/38776788
+    return ref
+  },
+
+  // ---------------- JSON SERVER ----------------
+  // TODO: Convert to Firebase approach
   get(dataType, id) {
-    return fetch(`${remoteURL}/${dataType}/${id}`)
+    return fetch(`${jsonURL}/${dataType}/${id}`)
       .then(result => result.json());
   },
+  // TODO: Convert to Firebase approach
   getCharacterWithType(id) {
-    return fetch(`${remoteURL}/characters/${id}?_expand=characterSubType`)
+    return fetch(`${jsonURL}/characters/${id}?_expand=characterSubType`)
       .then(result => result.json());
   },
+  // TODO: Convert to Firebase approach
   getAll(dataType) {
-    return fetch(`${remoteURL}/${dataType}`)
+    return fetch(`${jsonURL}/${dataType}`)
       .then(result => result.json());
   },
+  // TODO: Convert to Firebase approach
   getUserByEmail(email) {
-    return fetch(`${remoteURL}/users?email=${email}`)
+    return fetch(`${jsonURL}/users?email=${email}`)
     .then(result => result.json());
   },
+  // TODO: Convert to Firebase approach
   getCharacterAspects(id){
-    return fetch(`${remoteURL}/characterAspects?characterId=${id}`)
+    return fetch(`${jsonURL}/characterAspects?characterId=${id}`)
       .then(results => results.json());
   },
+  // TODO: Convert to Firebase approach
   getCharacterSkills(id){
-    return fetch(`${remoteURL}/characterSkills?characterId=${id}&_expand=skill`)
+    return fetch(`${jsonURL}/characterSkills?characterId=${id}&_expand=skill`)
       .then(results => results.json());
   },
+  // TODO: Convert to Firebase approach
   getCharacterStunts(id) {
-    return fetch(`${remoteURL}/characterStunts?characterId=${id}&_expand=stunt`)
+    return fetch(`${jsonURL}/characterStunts?characterId=${id}&_expand=stunt`)
       .then(results => results.json())
   },
+  // TODO: Convert to Firebase approach
   getCharacterList() {
-    return fetch(`${remoteURL}/characters?_embed=characterAspects&_expand=user&_expand=characterSubType`)
+    return fetch(`${jsonURL}/characters?_embed=characterAspects&_expand=user&_expand=characterSubType`)
       .then(results => results.json())
   },
+  // TODO: Convert to Firebase approach
   getAllSubTypesWithDetails() {
-    return fetch(`${remoteURL}/characterSubTypes/?_expand=characterType`)
+    return fetch(`${jsonURL}/characterSubTypes/?_expand=characterType`)
       .then(results => results.json())
   },
+  // TODO: Convert to Firebase approach
   getSubTypeDetails(id) {
-    return fetch(`${remoteURL}/characterSubTypes/${id}?_expand=characterType`)
+    return fetch(`${jsonURL}/characterSubTypes/${id}?_expand=characterType`)
       .then(results => results.json())
   },
+  // TODO: Convert to Firebase approach
   getAllExpand(dataType, expandType) {
-    return fetch(`${remoteURL}/${dataType}?_expand=${expandType}`)
+    return fetch(`${jsonURL}/${dataType}?_expand=${expandType}`)
       .then(results => results.json())
   },
+  // TODO: Convert to Firebase approach
   getAllEmbed(dataType, embedType) {
-    return fetch(`${remoteURL}/${dataType}?_embed=${embedType}`)
+    return fetch(`${jsonURL}/${dataType}?_embed=${embedType}`)
       .then(results => results.json())
   },
+  // TODO: Convert to Firebase approach
   search(dataType, query){
-    return fetch(`${remoteURL}/${dataType}?q=${query}`)
+    return fetch(`${jsonURL}/${dataType}?q=${query}`)
       .then(results => results.json())
   },
+  // TODO: Convert to Firebase approach
   delete(dataType, id) {
-    return fetch(`${remoteURL}/${dataType}/${id}`, {
+    return fetch(`${jsonURL}/${dataType}/${id}`, {
       method: "DELETE"
     }).then(result => result.json());
   },
+  // TODO: Convert to Firebase approach
   deleteByCharacterId(dataType, charId) {
-    return fetch(`${remoteURL}/${dataType}?characterId=${charId}`, {
+    return fetch(`${jsonURL}/${dataType}?characterId=${charId}`, {
       method: "DELETE"
     }).then(result => result.json());
   },
+  // TODO: Convert to Firebase approach
   post(dataType, objectToPost) {
-    return fetch(`${remoteURL}/${dataType}`, {
+    return fetch(`${jsonURL}/${dataType}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -72,8 +99,9 @@ export default {
       body: JSON.stringify(objectToPost)
     }).then(data => data.json());
   },
+    // TODO: Convert to Firebase approach
   update(dataType, objectToEdit) {
-    return fetch(`${remoteURL}/${dataType}/${objectToEdit.id}`, {
+    return fetch(`${jsonURL}/${dataType}/${objectToEdit.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json"
