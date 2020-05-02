@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Paginator from "react-hooks-paginator";
 import { Card, Container } from "semantic-ui-react"
-import ApiManager from "../../modules/ApiManager";
+// import ApiManager from "../../modules/ApiManager";
+import firebase from "../../firebase"
 import SkillCard from "./SkillCard"
+import ApiManager from "../../modules/ApiManager";
 // import firebase from "../../firebase"
 
 const SkillList = props => {
@@ -15,19 +17,8 @@ const SkillList = props => {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentData, setCurrentData] = useState([]);
 
-  // Failed attempt at firebase api get:
-  // const getSkills = () => {
-  //   // const skill_list = ApiManager.firebaseGetAll("skills")
-  //   const ref = firebase.database().ref("skills");
-  //   ref.on('value', (snapshot) => {
-  //     let skill_list = snapshot.val();
-  //     setSkills(skill_list)
-  //   })
-  // }
-
   const getSkills = () => {
-    return ApiManager.getAll("skills")
-      .then(setSkills);
+    ApiManager.fbGetAll("skills", setSkills)
   }
 
   useEffect(() => {

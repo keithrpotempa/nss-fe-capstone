@@ -14,11 +14,10 @@ const Stunts = props => {
   const [skills, setSkills] = useState([]);
 
   const getStunts = () => {
-    return ApiManager.getAllExpand("stunts", "skill")
+    ApiManager.fbGetAllExpand("stunts", "skill")
         /* Sorting the stunts alphabetically
           https://stackoverflow.com/a/45544166*/
-      .then(stunts => stunts.sort((a,b) => a.name.localeCompare(b.name)))
-      .then(setStunts);
+      // .then(stunts => stunts.sort((a,b) => a.name.localeCompare(b.name)))
   }
 
   const getSkills = () => {
@@ -26,6 +25,20 @@ const Stunts = props => {
       .then(skills => skills.sort((a, b) => a.name.localeCompare(b.name)))
       .then(setSkills)
   }  
+
+  // const getStunts = () => {
+  //   return ApiManager.getAllExpand("stunts", "skill")
+  //       /* Sorting the stunts alphabetically
+  //         https://stackoverflow.com/a/45544166*/
+  //     .then(stunts => stunts.sort((a,b) => a.name.localeCompare(b.name)))
+  //     .then(setStunts);
+  // }
+
+  // const getSkills = () => {
+  //   return ApiManager.getAll("skills")
+  //     .then(skills => skills.sort((a, b) => a.name.localeCompare(b.name)))
+  //     .then(setSkills)
+  // }  
 
   const handleFilterChange = (evt, {name, value}) => {
     setFilter(value);

@@ -1,6 +1,6 @@
 import firebase from '../firebase'
 
-const jsonURL = "http://localhost:5002";
+const jsonURL = "https://fate-character-codex.firebaseio.com/";
 
 export default {
   // ---------------- FIREBASE ----------------
@@ -10,14 +10,16 @@ export default {
     // https://stackoverflow.com/questions/38768576/in-firebase-when-using-push-how-do-i-get-the-unique-id-and-store-in-my-databas/38776788
     return ref
   },
-  // firebaseGetAll(dataType) {
-  //   const ref = firebase.database().ref(dataType);
-  //   ref.on('value', (snapshot) => {
-  //     return snapshot.val();
-  //   })
-  //   console.log(resp)
-  //   return resp
-  // },
+  fbGetAll(dataType, setFunction) {
+    const ref = firebase.database().ref(dataType)
+    ref.once('value', (snapshot) => setFunction(snapshot.val()))
+  },
+  // TODO: Convert to Firebase approach
+  // ISSUES: I can't figure out how to do an expand with these firebase methods
+  fbGetAllExpand(dataType, expandType, setFunction) {
+    const ref = firebase.database().ref(`${dataType}`) // 
+    ref.once('value', (snapshot) => console.log(snapshot.val()))
+  },
   // ---------------- JSON SERVER ----------------
   // TODO: Convert to Firebase approach
   get(dataType, id) {
@@ -29,7 +31,7 @@ export default {
     return fetch(`${jsonURL}/characters/${id}?_expand=characterSubType`)
       .then(result => result.json());
   },
-  // TODO: Convert to Firebase approach
+  // DONE: Convert to Firebase approach
   getAll(dataType) {
     return fetch(`${jsonURL}/${dataType}`)
       .then(result => result.json());
