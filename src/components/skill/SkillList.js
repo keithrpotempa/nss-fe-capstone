@@ -32,7 +32,7 @@ const SkillList = props => {
         <Card.Group stackable itemsPerRow={3}>
           {currentData.map((skill, index) => 
             <SkillCard
-              key={Object.keys(skills)[index]}
+              key={`skill-${skill.id}`}
               skill={skill}
             />  
           )}

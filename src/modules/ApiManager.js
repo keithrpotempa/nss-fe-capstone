@@ -1,19 +1,34 @@
 import firebase from '../firebase'
 
-const jsonURL = "https://fate-character-codex.firebaseio.com/";
+const jsonURL = "https://fate-character-codex.firebaseio.com";
+const localURL = "http://localhost:5002"
 
 export default {
   // ---------------- FIREBASE ----------------
+  update(dataType, key, objectToPush) {
+    // This method is used in combination with getKey to
+    // 1) Get a reference (key) for a character-to-create
+    // 2) Update that reference with the character
+
+    // Reference:
+    //https://firebase.google.com/docs/database/web/read-and-write#updating_or_deleting_data
+    const updates = {}
+    updates[`/${dataType}/${key}`] = objectToPush
+    return firebase.database().ref().update(updates)
+  },
+  getKey(dataType){
+    return firebase.database().ref().child(dataType).push().key
+  },
   push(dataType, objectToPush) {
-    const ref = firebase.database().ref(dataType).push(objectToPush)
+    return firebase.database().ref(`${dataType}/`).push(objectToPush)
     // It can be helpful to return the ref in order to get the key from it
     // https://stackoverflow.com/questions/38768576/in-firebase-when-using-push-how-do-i-get-the-unique-id-and-store-in-my-databas/38776788
-    return ref
   },
-  fbGetAll(dataType, setFunction) {
-    const ref = firebase.database().ref(dataType)
-    ref.once('value', (snapshot) => setFunction(snapshot.val()))
-  },
+  // UNUSED?
+  // fbGetAll(dataType, setFunction) {
+  //   const ref = firebase.database().ref(dataType)
+  //   ref.once('value', (snapshot) => setFunction(snapshot.val()))
+  // },
   // TODO: Convert to Firebase approach
   // ISSUES: I can't figure out how to do an expand with these firebase methods
   getCharacterAttributes(characterAttribute, id) {
@@ -46,7 +61,7 @@ export default {
   // },
   // TODO: Convert to Firebase approach
   getUserByEmail(email) {
-    return fetch(`${jsonURL}/users?email=${email}`)
+    return fetch(`${localURL}/users?email=${email}`)
     .then(result => result.json());
   },
   // TODO: Convert to Firebase approach
@@ -117,13 +132,13 @@ export default {
     }).then(data => data.json());
   },
     // TODO: Convert to Firebase approach
-  update(dataType, objectToEdit) {
-    return fetch(`${jsonURL}/${dataType}/${objectToEdit.id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(objectToEdit)
-    }).then(data => data.json());
-  }
+  // update(dataType, objectToEdit) {
+  //   return fetch(`${jsonURL}/${dataType}/${objectToEdit.id}`, {
+  //     method: "PUT",
+  //     headers: {
+  //       "Content-Type": "application/json"
+  //     },
+  //     body: JSON.stringify(objectToEdit)
+  //   }).then(data => data.json());
+  // }
 };

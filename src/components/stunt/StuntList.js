@@ -19,10 +19,6 @@ const StuntList = props => {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentData, setCurrentData] = useState([]);
 
-  // const matchSkill = (stunt) => {
-  //   return skills.find(skill => stunt.skillId === skill.id) 
-  // }
-
   useEffect(() => {
     setCurrentData(stunts.slice(offset, offset + pageLimit))
   }, [offset, stunts])
@@ -32,9 +28,9 @@ const StuntList = props => {
         <Card.Group itemsPerRow={3}>
           {currentData.map((stunt, index) => 
             <StuntCard
-              key={Object.keys(stunts)[index]}
+              key={`stunt-${stunt.id}`}
               stunt={stunt}
-              skill={skills[stunt.skillId]}
+              skill={skills.find(skill => skill.id === stunt.skillId)}
             />  
           )}
         </Card.Group>

@@ -29,6 +29,10 @@ const SaveCharacter = props => {
       characterToSave.id = parseInt(props.match.params.characterId);
       characterToSave.created = character.created
     }
+    else {
+      characterToSave.id = ApiManager.getKey("characters");
+    }
+    console.log("characterToSave", characterToSave)
     return characterToSave;
   }
 
@@ -157,10 +161,7 @@ const SaveCharacter = props => {
     if (isEdit) {
       // FIXME: TO BUILD
     } else {
-      // If its not an edit, its a save
-      // we need to get the id of the firebase reference
-      const id = ApiManager.push('characters', char).key
-      char.id = id
+      ApiManager.update('characters', char.id, char)
     }
     return char
   }
@@ -211,10 +212,10 @@ const SaveCharacter = props => {
       setIsLoading(true);
       // Save character to firebase
       // and store return key/id value for subsequent saves 
-      const charId = saveCharacter(char).id;
-      saveAspects(charId);
-      saveSkills(charId);
-      saveStunts(charId);
+      saveCharacter(char);
+      saveAspects(char.id);
+      saveSkills(char.id);
+      saveStunts(char.id);
       props.history.push("/characters")
     }
   }

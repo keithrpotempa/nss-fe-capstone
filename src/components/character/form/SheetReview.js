@@ -39,7 +39,7 @@ const SheetReview = props => {
         stateToChange[i] = skills[i].map(characterSkillId => {
           // Finding a match in ids between api skill list and character skill
           // returning that skill's name
-          return skillList.find( ({id}) => id === characterSkillId).name
+          return skillList.find( ({id}) => id === parseInt(characterSkillId)).name
         })
       }
     } 

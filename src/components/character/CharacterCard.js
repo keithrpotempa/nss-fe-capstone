@@ -14,7 +14,7 @@ const CharacterCard = props => {
         raised
         // href={`/characters/${character.id}`}
         header={character.name}
-        description={props.highConcept}
+        // description={props.highConcept}
         meta={`by: ${user.email}`}
         extra={
           <>

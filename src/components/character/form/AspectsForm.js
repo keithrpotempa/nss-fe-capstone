@@ -17,11 +17,11 @@ const AspectForm = props => {
       //TODO: make aspectTypeId here more dynamic and less hard-coded
       const getAspectTypeId = () => {
         if (indexToChange === "0") {
-          return 1
+          return 0
         } else if (indexToChange === "1") {
-          return 2
+          return 1
         } else if (indexToChange > "1") {
-          return 3
+          return 2
         }
       }
       stateToChange[indexToChange] = {
@@ -43,11 +43,11 @@ const AspectForm = props => {
       // TODO: make aspect type an option
       // and less hard-coded
       if (i === 0) {
-        typeId = 1;
+        typeId = 0;
       } else if (i === 1) {
-        typeId = 2;
+        typeId = 1;
       } else if (i > 1) {
-        typeId = 3;
+        typeId = 2;
       }
       aspectInputs.push(
         <AspectInput 

@@ -43,11 +43,11 @@ const CharacterId = props => {
     // If they're a PC, set their subtype for them
     // (there's no subtype for PCs)
     // Otherwise, wipe any chosen subtype
-    if (value === "1") {
+    if (value === "0") {
       // TODO: make this less dependent on being hard-coded
-      stateToChange["subtype"] = "6"; // 6 is the PC subtype
+      stateToChange["subtype"] = "5"; // 5 is the PC subtype
       // Force a get of the subtype details:
-      getCharacterSubtypeDetails(6); 
+      getCharacterSubtypeDetails(5); 
     } else {
       // If they're changing the character's type, 
       // clear any chosen subtype info
@@ -109,7 +109,7 @@ const CharacterId = props => {
         />
         {// Don't display this option until a type is chosen
           // And don't display it if they're a PC (no additional choice necessary)
-          character.type === "" || character.type === "1"
+          character.type === "" || character.type === "0"
             ? <></>
             : <Dropdown 
                 required

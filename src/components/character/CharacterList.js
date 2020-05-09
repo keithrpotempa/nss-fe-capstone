@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Paginator from "react-hooks-paginator";
 import { confirmAlert } from 'react-confirm-alert';
-import { Card, Container } from "semantic-ui-react"
+import { Card } from "semantic-ui-react"
 import CharacterCard from "./CharacterCard";
 import ApiManager from "../../modules/ApiManager";
 
