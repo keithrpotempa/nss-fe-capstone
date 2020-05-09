@@ -30,12 +30,12 @@ const StuntList = props => {
   return (
     <>
         <Card.Group itemsPerRow={3}>
-          {currentData.map(stunt => 
+          {currentData.map((stunt, index) => 
             <StuntCard
-              key={stunt.id}
+              key={Object.keys(stunts)[index]}
               stunt={stunt}
               // TO FIX: this parse int...
-              skill={skills.find(skill => stunt.skillId === parseInt(skill.id))}
+              skill={skills[stunt.skillId]}
             />  
           )}
         </Card.Group>

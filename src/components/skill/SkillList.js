@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Paginator from "react-hooks-paginator";
 import { Card, Container } from "semantic-ui-react"
-// import ApiManager from "../../modules/ApiManager";
-import firebase from "../../firebase"
 import SkillCard from "./SkillCard"
 import ApiManager from "../../modules/ApiManager";
-// import firebase from "../../firebase"
 
 const SkillList = props => {
   const [skills, setSkills] = useState([]);
@@ -33,9 +30,9 @@ const SkillList = props => {
           <h1>Skills</h1>
         </div>
         <Card.Group stackable itemsPerRow={3}>
-          {currentData.map(skill => 
+          {currentData.map((skill, index) => 
             <SkillCard
-              key={skill.id}
+              key={Object.keys(skills)[index]}
               skill={skill}
             />  
           )}
