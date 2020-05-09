@@ -5,8 +5,8 @@ import "./Stunt.css";
 const StuntCard = props => {
   const name = props.stunt.name;
   const description = props.stunt.description;
-  const skill = props.stunt.skill.name;
-  const skillUrl = props.stunt.skill.url;
+  const skill = props.skill;
+  const skillUrl = props.skill.url;
 
   return (
     <>
@@ -14,7 +14,7 @@ const StuntCard = props => {
         raised
         header={name}
         description={description}
-        meta={`Associated Skill: ${skill}`}
+        meta={`Associated Skill: ${skill.name}`}
         // The following safely open a new tab
         href={skillUrl}
         target="_blank" 

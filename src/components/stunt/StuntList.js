@@ -10,6 +10,7 @@ import StuntCard from "./StuntCard"
 */
 const StuntList = props => {
   const stunts = props.stunts;
+  const skills = props.skills;
 
   // State related to pagination 
   // reference: https://www.npmjs.com/package/react-hooks-paginator
@@ -17,6 +18,10 @@ const StuntList = props => {
   const [offset, setOffset] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentData, setCurrentData] = useState([]);
+
+  // const matchSkill = (stunt) => {
+  //   return skills.find(skill => stunt.skillId === skill.id) 
+  // }
 
   useEffect(() => {
     setCurrentData(stunts.slice(offset, offset + pageLimit))
@@ -29,6 +34,8 @@ const StuntList = props => {
             <StuntCard
               key={stunt.id}
               stunt={stunt}
+              // TO FIX: this parse int...
+              skill={skills.find(skill => stunt.skillId === parseInt(skill.id))}
             />  
           )}
         </Card.Group>

@@ -16,26 +16,34 @@ export default {
   },
   // TODO: Convert to Firebase approach
   // ISSUES: I can't figure out how to do an expand with these firebase methods
-  fbGetAllExpand(dataType, expandType, setFunction) {
-    const ref = firebase.database().ref(`${dataType}`) // 
-    ref.once('value', (snapshot) => console.log(snapshot.val()))
+  getCharacterAttributes(characterAttribute, id) {
+    return fetch(`${jsonURL}/${characterAttribute}/.json?orderBy="characterId"&equalTo=${id}`)
+      .then(result => result.json());
+  },
+  get(dataType, id) {
+    return fetch(`${jsonURL}/${dataType}/${id}.json`)
+      .then(result => result.json());
+  },
+  getAll(dataType) {
+    return fetch(`${jsonURL}/${dataType}/.json`)
+      .then(result => result.json());
   },
   // ---------------- JSON SERVER ----------------
   // TODO: Convert to Firebase approach
-  get(dataType, id) {
-    return fetch(`${jsonURL}/${dataType}/${id}`)
-      .then(result => result.json());
-  },
+  // get(dataType, id) {
+  //   return fetch(`${jsonURL}/${dataType}/${id}`)
+  //     .then(result => result.json());
+  // },
   // TODO: Convert to Firebase approach
   getCharacterWithType(id) {
     return fetch(`${jsonURL}/characters/${id}?_expand=characterSubType`)
       .then(result => result.json());
   },
   // DONE: Convert to Firebase approach
-  getAll(dataType) {
-    return fetch(`${jsonURL}/${dataType}`)
-      .then(result => result.json());
-  },
+  // getAll(dataType) {
+  //   return fetch(`${jsonURL}/${dataType}`)
+  //     .then(result => result.json());
+  // },
   // TODO: Convert to Firebase approach
   getUserByEmail(email) {
     return fetch(`${jsonURL}/users?email=${email}`)
@@ -77,10 +85,10 @@ export default {
       .then(results => results.json())
   },
   // TODO: Convert to Firebase approach
-  getAllEmbed(dataType, embedType) {
-    return fetch(`${jsonURL}/${dataType}?_embed=${embedType}`)
-      .then(results => results.json())
-  },
+  // getAllEmbed(dataType, embedType) {
+  //   return fetch(`${jsonURL}/${dataType}?_embed=${embedType}`)
+  //     .then(results => results.json())
+  // },
   // TODO: Convert to Firebase approach
   search(dataType, query){
     return fetch(`${jsonURL}/${dataType}?q=${query}`)

@@ -14,10 +14,9 @@ const Stunts = props => {
   const [skills, setSkills] = useState([]);
 
   const getStunts = () => {
-    ApiManager.fbGetAllExpand("stunts", "skill")
-        /* Sorting the stunts alphabetically
-          https://stackoverflow.com/a/45544166*/
-      // .then(stunts => stunts.sort((a,b) => a.name.localeCompare(b.name)))
+    ApiManager.getAll("stunts")
+      .then(stunts => stunts.sort((a,b) => a.name.localeCompare(b.name)))
+      .then(setStunts)
   }
 
   const getSkills = () => {
@@ -25,20 +24,6 @@ const Stunts = props => {
       .then(skills => skills.sort((a, b) => a.name.localeCompare(b.name)))
       .then(setSkills)
   }  
-
-  // const getStunts = () => {
-  //   return ApiManager.getAllExpand("stunts", "skill")
-  //       /* Sorting the stunts alphabetically
-  //         https://stackoverflow.com/a/45544166*/
-  //     .then(stunts => stunts.sort((a,b) => a.name.localeCompare(b.name)))
-  //     .then(setStunts);
-  // }
-
-  // const getSkills = () => {
-  //   return ApiManager.getAll("skills")
-  //     .then(skills => skills.sort((a, b) => a.name.localeCompare(b.name)))
-  //     .then(setSkills)
-  // }  
 
   const handleFilterChange = (evt, {name, value}) => {
     setFilter(value);
@@ -51,8 +36,8 @@ const Stunts = props => {
   }
 
   useEffect(() => {
-    getStunts();
     getSkills();
+    getStunts();
     if (filter !== "") {
       filterStunts();
     }
@@ -89,6 +74,7 @@ const Stunts = props => {
               ? filteredStunts
               : stunts
           } 
+          skills={skills}
         />
       </Container>
     </>
