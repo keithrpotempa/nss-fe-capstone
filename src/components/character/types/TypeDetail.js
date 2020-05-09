@@ -4,28 +4,30 @@ import ApiManager from "../../../modules/ApiManager";
 
 const TypeDetail = props => {
   const [subType, setSubType] = useState({});
+  const [type, setType] = useState("");
   const id = props.subTypeId;
   const verbose = props.verbose;
 
   const getSubType = () => {
-    ApiManager.getSubTypeDetails(id)
-      .then(setSubType)
+    ApiManager.get("characterSubTypes", id)
+      .then(subType => {
+        setSubType(subType)
+        // After setting the subtype, reach out for the type
+        // using the subtype's characterTypeId
+        ApiManager.get("characterTypes", subType.characterTypeId)
+          .then(setType)
+      })
   }
-
+  
   useEffect(()=>{
     getSubType();
   }, [id])
 
   return (
     <>
-      {/* TODO: URL Link  */}
       <Container text>
         <div className="header-container">
-          {/* Having issues with this erroring out before full render */}
-          {subType.characterType 
-            ? <h2> {subType.name}: {subType.characterType.name}</h2>
-            : <></>   
-          }
+          <h2> {subType.name}: {type.name}</h2>
         </div>
         <Card.Group itemsPerRow={1}>
           <Card

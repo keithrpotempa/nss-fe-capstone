@@ -61,6 +61,7 @@ const Stunts = props => {
             value={filter}
             // Getting the index out of map
             options={skills.map((skill, index) => (
+              // Tricky way of getting the object's key (formerly the id)
               {
                 key: `skills-${Object.keys(skills)[index]}`,
                 value: `${Object.keys(skills)[index]}`,

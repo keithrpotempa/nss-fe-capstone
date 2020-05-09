@@ -10,6 +10,7 @@ import SubTypeCard from "./SubTypeCard";
 */
 const TypeList = props => {
   const subTypeList = props.subTypeList;
+  const typeList = props.typeList;
 
   // State related to pagination 
   // reference: https://www.npmjs.com/package/react-hooks-paginator
@@ -27,8 +28,9 @@ const TypeList = props => {
       <Card.Group itemsPerRow={3}>
         {currentData.map(subType => 
             <SubTypeCard
-              key={subType.id}
+              key={`subType-${subType.id}`}
               subType={subType}
+              type={typeList.find(type => type.id === subType.characterTypeId)}
             />  
           )
         }

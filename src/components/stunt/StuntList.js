@@ -34,7 +34,6 @@ const StuntList = props => {
             <StuntCard
               key={Object.keys(stunts)[index]}
               stunt={stunt}
-              // TO FIX: this parse int...
               skill={skills[stunt.skillId]}
             />  
           )}

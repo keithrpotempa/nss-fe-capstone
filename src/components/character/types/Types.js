@@ -16,7 +16,7 @@ const Types = props => {
   }
 
   const getSubTypeList = () => {
-    return ApiManager.getAllSubTypesWithDetails()
+    return ApiManager.getAll("characterSubTypes")
       .then(subtypes => subtypes.sort((a,b) => a.name.localeCompare(b.name)))
       .then(setSubTypeList);
   }
@@ -70,6 +70,7 @@ const Types = props => {
               ? filteredSubTypes 
               : subTypeList
           }
+          typeList={typeList}
         />
       </Container>
     </>
