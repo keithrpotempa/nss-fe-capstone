@@ -31,9 +31,24 @@ export default {
   // },
   // TODO: Convert to Firebase approach
   // ISSUES: I can't figure out how to do an expand with these firebase methods
-  getCharacterAttributes(characterAttribute, id) {
-    return fetch(`${jsonURL}/${characterAttribute}/.json?orderBy="characterId"&equalTo=${id}`)
+  getCharacterAttributes(characterAttribute, characterId) {
+    return fetch(`${jsonURL}/${characterAttribute}/.json?orderBy="characterId"&equalTo="${characterId}"`)
       .then(result => result.json());
+  },
+  getHighConcept(characterId) {
+    return fetch(`${jsonURL}/characterAspects/.json?orderBy="characterId"&equalTo="${characterId}"`)
+      .then(result => result.json())
+      .then(this.arrayify)
+      .then(aspects => aspects.filter(aspect => aspect.aspectTypeId === 0)[0].name)
+  },
+  arrayify(arrayLikeObject){
+    let array = []
+
+    Object.entries(arrayLikeObject).forEach(([key, value]) => {
+      array.push(value)
+    });
+
+    return array
   },
   get(dataType, id) {
     return fetch(`${jsonURL}/${dataType}/${id}.json`)

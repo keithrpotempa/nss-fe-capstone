@@ -18,20 +18,13 @@ const Characters = props => {
   const [filter, setFilter] = useState({type: "", subtype: ""})
 
   const getCharacters = () => {
-    return ApiManager.getCharacterList("characters")
+    return ApiManager.getAll("characters")
         /* Sorting characters alphabetically
           https://stackoverflow.com/a/45544166*/
+      .then(ApiManager.arrayify)
       .then(characters => characters.sort((a,b) => a.name.localeCompare(b.name)))
       .then(setCharacters)
   }
-
-  // const getCharacters = () => {
-  //   ApiManager.getCharacterList()
-  //       /* Sorting characters alphabetically
-  //         https://stackoverflow.com/a/45544166*/
-  //     .then(characters => characters.sort((a,b) => a.name.localeCompare(b.name)))
-  //     .then(setCharacters)
-  // }
 
   const getCharacterTypeList = () => {
     return ApiManager.getAll("characterTypes")

@@ -20,20 +20,20 @@ const CharacterList = props => {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentData, setCurrentData] = useState([]);
 
-  const getHighConcept = (character) => {
-    const aspects = character.characterAspects;
-    /* 
-      Filter out everything that isn't 
-      a High Concept (type of 1)
-      Return the .name property of the only aspect
-      remaining in the array  
-      (there's only ever one High Aspect)
-    */
-    const highConcept = aspects.filter(aspect => {
-      return aspect.aspectTypeId === 1;
-    })[0].name
-    return highConcept;
-  }
+  // const getHighConcept = (character) => {
+  //   const aspects = character.characterAspects;
+  //   /* 
+  //     Filter out everything that isn't 
+  //     a High Concept (type of 1)
+  //     Return the .name property of the only aspect
+  //     remaining in the array  
+  //     (there's only ever one High Aspect)
+  //   */
+  //   const highConcept = aspects.filter(aspect => {
+  //     return aspect.aspectTypeId === 1;
+  //   })[0].name
+  //   return highConcept;
+  // }
 
   const handleDelete = (id) => {
     confirmAlert({
@@ -68,7 +68,6 @@ const CharacterList = props => {
               <CharacterCard
                 key={character.id}
                 character={character}
-                highConcept={getHighConcept(character)}
                 handleDelete={() => handleDelete(character.id)}
                 activeUser={activeUser}
               />
