@@ -35,34 +35,42 @@ const CharacterSheet = props => {
   const id = props.characterId;
 
   const getCharacter = () => {
-    ApiManager.get("characters", id)
+    return ApiManager.get("characters", id)
       .then(character => {
         setCharacter(character)
-        console.log(character)
         ApiManager.get("characterSubTypes", character.characterSubTypeId)
           .then(setCharacterSubType)
       });
   }
 
   const getCharacterAspects = () => {
-    ApiManager.getCharacterAttributes("characterAspects", id)
+    return ApiManager.getCharacterAttributes("characterAspects", id)
       .then(aspects => setCharacterAspects(ApiManager.arrayify(aspects)));
   }
 
-  const getCharacterSkills = () => {
-    ApiManager.getCharacterSkills(id)
-      .then(rawSkills => {
-          // Before the skills are sorted into a weird format to output
-          // we extract the rating of will and physique to use later
-          // If they don't have a rating, consider it to be zero
-          const will = rawSkills.find( ({skillId}) => skillId === 18)
-          will ? setWillRating(will.skillRating) : setWillRating(0)
-
-          const physique = rawSkills.find( ({skillId}) => skillId === 12)
-          physique ? setPhysiqueRating(physique.skillRating) : setPhysiqueRating(0)
-          return rawSkills
+  const getSkills = () => {
+    return ApiManager.getAll("skills")
+      .then(skills => {
+        console.log("response", skills)
+        setSkills(skills)
       })
-      .then(setFormattedSkills)
+  }
+
+  const getCharacterSkills = () => {
+    ApiManager.getCharacterAttributes("characterSkills", id)
+      .then(rawSkills => {
+        rawSkills = ApiManager.arrayify(rawSkills)
+        // Before the skills are sorted into a weird format to output
+        // we extract the rating of will and physique to use later
+        // If they don't have a rating, consider it to be zero
+        const will = rawSkills.find( ({skillId}) => skillId === 18)
+        will ? setWillRating(will.skillRating) : setWillRating(0)
+
+        const physique = rawSkills.find( ({skillId}) => skillId === 12)
+        physique ? setPhysiqueRating(physique.skillRating) : setPhysiqueRating(0)
+        return rawSkills
+      })
+        .then(setFormattedSkills)
   }
 
   const setFormattedSkills = (rawSkills) => {
@@ -77,13 +85,30 @@ const CharacterSheet = props => {
   const skillsByRating = (rawSkills, rating) => {
     // Converting the format of the db to the format of the form's state
     const filteredSkills = rawSkills.filter(skill => skill.skillRating === rating)
-    const formattedSkills = filteredSkills.map(skill => skill.skill.name)
+    // FIXME: for some god forsaken reason,
+    // skills is not accessible at this point in time,
+    // no matter how I nest it inside thens 
+
+    // I can't migrate these functionalities "down", 
+    // because then it would mess with the "review" functioanlity
+    // of the new / edit character 
+    console.log("filteredSkills", filteredSkills)
+    console.log("skills", skills)
+    const formattedSkills = filteredSkills.map(skill => skills[skill.skillId])
+    console.log(formattedSkills)
     return formattedSkills;
   }
 
+  const getStunts = () => {
+    ApiManager.getAll("stunts")
+      .then(setStunts)
+  }
+
   const getCharacterStunts = () => {
-    ApiManager.getCharacterStunts(id)
-      .then(setCharacterStunts);
+    ApiManager.getCharacterAttributes("characterStunts", id)
+      .then(stunts => {
+        setCharacterStunts(ApiManager.arrayify(stunts))
+      });
   }
 
   const handleDelete = (id) => {
@@ -107,7 +132,10 @@ const CharacterSheet = props => {
   useEffect(()=>{
     getCharacter();
     getCharacterAspects();
+    getSkills();
+    getStunts();
     getCharacterSkills();
+    // FIXME: uncomment when you get skills to work...
     getCharacterStunts();
     setIsLoading(false);
   }, [])
@@ -119,7 +147,7 @@ const CharacterSheet = props => {
           character={character}
           aspects={characterAspects}
           skills={characterSkills}
-          stunts={stunts}
+          stunts={characterStunts}
           physiqueRating={physiqueRating}
           willRating={willRating}
           characterSubType={characterSubType}
