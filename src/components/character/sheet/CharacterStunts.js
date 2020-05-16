@@ -11,10 +11,16 @@ const CharacterStunts = props => {
           <h4>Stunts</h4>
         </Divider>
         <Item.Group>
+          {/* 
+            NOTE, this was stunt.stunt.id, stunt.stunt.name, stunt.stunt.description
+            before the firebase migration of character sheet.
+
+            This may cause problems with preview...
+          */}
           {stunts.map(stunt => 
-            <Item key={`stunt-${stunt.stunt.id}`}
-            header={stunt.stunt.name}
-            description={stunt.stunt.description}
+            <Item key={`stunt-${stunt.id}`}
+            header={stunt.name}
+            description={stunt.description}
             />
           )}
         </Item.Group>
