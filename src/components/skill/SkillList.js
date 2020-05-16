@@ -15,7 +15,8 @@ const SkillList = props => {
   const [currentData, setCurrentData] = useState([]);
 
   const getSkills = () => {
-    ApiManager.fbGetAll("skills", setSkills)
+    ApiManager.getAll("skills")
+      .then(setSkills)
   }
 
   useEffect(() => {

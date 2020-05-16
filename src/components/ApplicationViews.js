@@ -58,14 +58,14 @@ const ApplicationViews = props => {
       />
       <Route
         exact
-        path="/characters/:characterId(\d+)"
+        path="/characters/:characterId"
         render={props => {
-          const characterId = parseInt(props.match.params.characterId);
+          const characterId = props.match.params.characterId;
           return <CharacterSheet characterId={characterId} {...props} />;
         }}
       />
       <Route
-        path="/characters/:characterId(\d+)/edit"
+        path="/characters/:characterId/edit"
         render={props => {
           // TODO: this also needs to be the user that made this character
           if (hasUser) {

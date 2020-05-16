@@ -41,6 +41,11 @@ export default {
       .then(this.arrayify)
       .then(aspects => aspects.filter(aspect => aspect.aspectTypeId === 0)[0].name)
   },
+  /* 
+    Since Realtime Database data types are composed of array-like objects,
+    while JSON server used arrays, this function had to be created to 
+    convert those objects back into arrays in order to map them
+  */
   arrayify(arrayLikeObject){
     let array = []
 
@@ -60,29 +65,9 @@ export default {
   },
   // ---------------- JSON SERVER ----------------
   // TODO: Convert to Firebase approach
-  // get(dataType, id) {
-  //   return fetch(`${jsonURL}/${dataType}/${id}`)
-  //     .then(result => result.json());
-  // },
-  // TODO: Convert to Firebase approach
-  getCharacterWithType(id) {
-    return fetch(`${jsonURL}/characters/${id}?_expand=characterSubType`)
-      .then(result => result.json());
-  },
-  // DONE: Convert to Firebase approach
-  // getAll(dataType) {
-  //   return fetch(`${jsonURL}/${dataType}`)
-  //     .then(result => result.json());
-  // },
-  // TODO: Convert to Firebase approach
   getUserByEmail(email) {
     return fetch(`${localURL}/users?email=${email}`)
     .then(result => result.json());
-  },
-  // TODO: Convert to Firebase approach
-  getCharacterAspects(id){
-    return fetch(`${jsonURL}/characterAspects?characterId=${id}`)
-      .then(results => results.json());
   },
   // TODO: Convert to Firebase approach
   getCharacterSkills(id){

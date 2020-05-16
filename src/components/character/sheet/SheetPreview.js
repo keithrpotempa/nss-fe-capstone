@@ -30,16 +30,16 @@ const SheetPreview = props => {
             <CharacterAspects aspects={props.aspects}/>
           </Grid.Column>
           <Grid.Column verticalAlign='middle'>
-            <CharacterSkills skills={props.skills}/>
+            {/* <CharacterSkills skills={props.skills}/> */}
           </Grid.Column>
         </Grid>
       </Segment>
-      <CharacterStunts stunts={props.stunts}/>
-      <StressConsequences
+      {/* <CharacterStunts stunts={props.stunts}/> */}
+      {/* <StressConsequences
         physiqueRating={props.physiqueRating}
         willRating={props.willRating}
         characterSubType={props.characterSubType}
-      />
+      /> */}
     </>
   )
 }

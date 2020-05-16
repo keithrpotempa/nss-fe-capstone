@@ -7,11 +7,17 @@ import ApiManager from "../../../modules/ApiManager";
 import CharacterMeta from "./CharacterMeta";
 import SheetPreview from "./SheetPreview";
 
+// This parent component (of all character sheet components) 
+// gets all the data necessary to render a character sheet.
+// It is used by the character sheet view (detail route)
+// but not in the review stage of the character creation process
+
 const CharacterSheet = props => {
   const [character, setCharacter] = useState({});
   const [characterSubType, setCharacterSubType] = useState({});
-  const [aspects, setAspects] = useState([]);
-  const [skills, setSkills] = useState({
+  const [characterAspects, setCharacterAspects] = useState([]);
+  const [skills, setSkills] = useState([]);
+  const [characterSkills, setCharacterSkills] = useState({
     6: [],
     5: [],
     4: [],
@@ -22,25 +28,28 @@ const CharacterSheet = props => {
   const [physiqueRating, setPhysiqueRating] = useState({});
   const [willRating, setWillRating] = useState({});
   const [stunts, setStunts] = useState([]);
+  const [characterStunts, setCharacterStunts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   
   const activeUser = JSON.parse(sessionStorage.getItem("credentials"));
   const id = props.characterId;
 
   const getCharacter = () => {
-    ApiManager.getCharacterWithType(id)
+    ApiManager.get("characters", id)
       .then(character => {
         setCharacter(character)
-        setCharacterSubType(character.characterSubType)
+        console.log(character)
+        ApiManager.get("characterSubTypes", character.characterSubTypeId)
+          .then(setCharacterSubType)
       });
   }
 
-  const getAspects = () => {
-    ApiManager.getCharacterAspects(id)
-      .then(setAspects);
+  const getCharacterAspects = () => {
+    ApiManager.getCharacterAttributes("characterAspects", id)
+      .then(aspects => setCharacterAspects(ApiManager.arrayify(aspects)));
   }
 
-  const getSkills = () => {
+  const getCharacterSkills = () => {
     ApiManager.getCharacterSkills(id)
       .then(rawSkills => {
           // Before the skills are sorted into a weird format to output
@@ -57,12 +66,12 @@ const CharacterSheet = props => {
   }
 
   const setFormattedSkills = (rawSkills) => {
-    const stateToChange = {...skills};
+    const stateToChange = {...characterSkills};
     // TODO: Make this loop more adaptable to different range of rating levels
     for (let i = 1; i < 7; i++) {
       stateToChange[i] = skillsByRating(rawSkills, i)
     } 
-    setSkills(stateToChange)
+    setCharacterSkills(stateToChange)
   }
 
   const skillsByRating = (rawSkills, rating) => {
@@ -72,9 +81,9 @@ const CharacterSheet = props => {
     return formattedSkills;
   }
 
-  const getStunts = () => {
+  const getCharacterStunts = () => {
     ApiManager.getCharacterStunts(id)
-      .then(setStunts);
+      .then(setCharacterStunts);
   }
 
   const handleDelete = (id) => {
@@ -97,9 +106,9 @@ const CharacterSheet = props => {
 
   useEffect(()=>{
     getCharacter();
-    getAspects();
-    getSkills();
-    getStunts();
+    getCharacterAspects();
+    getCharacterSkills();
+    getCharacterStunts();
     setIsLoading(false);
   }, [])
 
@@ -108,8 +117,8 @@ const CharacterSheet = props => {
       <Container text>
         <SheetPreview 
           character={character}
-          aspects={aspects}
-          skills={skills}
+          aspects={characterAspects}
+          skills={characterSkills}
           stunts={stunts}
           physiqueRating={physiqueRating}
           willRating={willRating}
