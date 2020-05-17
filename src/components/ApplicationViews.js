@@ -1,5 +1,5 @@
 import { Route, Redirect } from "react-router-dom";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import SkillList from "./skill/SkillList";
 import Stunts from "./stunt/Stunts";
@@ -14,25 +14,78 @@ import TypeDetail from "./character/types/TypeDetail";
 import Login from "./user/Login"
 import Register from "./user/Register"
 
+import ApiManager from "../modules/ApiManager"
+
 const ApplicationViews = props => {
   const hasUser = props.hasUser;
   const setUser = props.setUser;
+
+  // Since the vast majority of components use the static mechanics lists
+  // I've 'lifted' these components here, to be shared by all
+  const [characterTypeList, setCharacterTypeList] = useState([]);
+  const [characterSubTypeList, setCharacterSubTypeList] = useState([]);
+  const [skillList, setSkillList] = useState([]);
+  const [stuntList, setStuntList] = useState([]);
+
+  const getCharacterTypeList = () => {
+    return ApiManager.getAll("characterTypes")
+      .then(types => types.sort((a,b) => a.name.localeCompare(b.name)))
+      .then(setCharacterTypeList);
+  }
+
+  const getCharacterSubTypes = () => {
+    ApiManager.getAll("characterSubTypes")
+      .then(subtypes => subtypes.sort((a,b) => a.name.localeCompare(b.name)))
+      .then(setCharacterSubTypeList)
+  }
+
+  const getSkillList = () => {
+    return ApiManager.getAll("skills")
+        .then(skills => skills.sort((a, b) => a.name.localeCompare(b.name)))
+        .then(setSkillList)
+  }
+
+  const getStuntList = () => {
+    ApiManager.getAll("stunts")
+      .then(stunts => stunts.sort((a,b) => a.name.localeCompare(b.name)))
+      .then(setStuntList)
+  }
+
+  useEffect(()=>{
+    getCharacterTypeList();
+    getCharacterSubTypes();
+    getSkillList();
+    getStuntList();
+  }, [])
 
   return (
     <>
       {/* -------------------MECHANICS------------------- */}
       <Route path="/skills" render={props => {
-        return <SkillList {...props}/>
+        return <SkillList 
+          skillList={skillList} 
+          {...props}
+        />
       }}/>
       <Route path="/stunts" render={props => {
-        return <Stunts {...props}/>
+        return <Stunts 
+          skillList={skillList} 
+          stuntList={stuntList} 
+          {...props}
+        />
       }}/>
       <Route exact path="/types" render={props => {
-        return <Types {...props}/>
+        return <Types 
+          characterTypeList={characterTypeList}
+          characterSubTypeList={characterSubTypeList} 
+          {...props}
+        />
       }}/>
       <Route path="/types/:subTypeId(\d+)" 
         render={props => {
           return <TypeDetail 
+            characterTypeList={characterTypeList}
+            characterSubTypeList={characterSubTypeList}
             subTypeId={props.match.params.subTypeId}
             verbose={true}
             {...props}
@@ -41,10 +94,22 @@ const ApplicationViews = props => {
       {/* -------------------CHARACTER------------------- */}
       {/* TODO: Make root be something other than characters */}
       <Route exact path="/" render={props => {
-        return <Characters {...props}/>
+        return <Characters
+          characterTypeList={characterTypeList} 
+          characterSubTypeList={characterSubTypeList}
+          skillList={skillList}
+          stuntList={stuntList}
+          {...props}
+        />
       }}/>
       <Route exact path="/characters" render={props => {
-        return <Characters {...props}/>
+        return <Characters
+          characterTypeList={characterTypeList} 
+          characterSubTypeList={characterSubTypeList}
+          skillList={skillList}
+          stuntList={stuntList}
+          {...props}
+        />
       }}/>
       <Route 
         path="/characters/new"
@@ -60,8 +125,14 @@ const ApplicationViews = props => {
         exact
         path="/characters/:characterId"
         render={props => {
-          const characterId = props.match.params.characterId;
-          return <CharacterSheet characterId={characterId} {...props} />;
+          return <CharacterSheet 
+            characterId={props.match.params.characterId}
+            characterTypeList={characterTypeList} 
+            characterSubTypeList={characterSubTypeList}
+            skillList={skillList}
+            stuntList={stuntList}
+            {...props} 
+          />;
         }}
       />
       <Route
@@ -69,7 +140,13 @@ const ApplicationViews = props => {
         render={props => {
           // TODO: this also needs to be the user that made this character
           if (hasUser) {
-            return <MainForm {...props} />;
+            return <MainForm
+              characterTypeList={characterTypeList} 
+              characterSubTypeList={characterSubTypeList}
+              skillList={skillList}
+              stuntList={stuntList}
+              {...props} 
+            />;
           } else {
             return <Redirect to="/login" />;
           }
@@ -80,7 +157,13 @@ const ApplicationViews = props => {
         path="/characters/oldnew"
         render={props => {
           if (hasUser) {
-            return <CharacterForm {...props} />;
+            return <CharacterForm
+              characterTypeList={characterTypeList} 
+              characterSubTypeList={characterSubTypeList}
+              skillList={skillList}
+              stuntList={stuntList}
+              {...props} 
+            />;
           } else {
             return <Redirect to="/login" />;
           }
@@ -91,7 +174,13 @@ const ApplicationViews = props => {
         render={props => {
           // TODO: this also needs to be the user that made this character
           if (hasUser) {
-            return <CharacterForm {...props} />;
+            return <CharacterForm
+              characterTypeList={characterTypeList} 
+              characterSubTypeList={characterSubTypeList}
+              skillList={skillList}
+              stuntList={stuntList}
+              {...props} 
+            />;
           } else {
             return <Redirect to="/login" />;
           }

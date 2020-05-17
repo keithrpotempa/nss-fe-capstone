@@ -9,8 +9,8 @@ import SubTypeCard from "./SubTypeCard";
   (filtered or not) and renders them with pagination
 */
 const TypeList = props => {
-  const subTypeList = props.subTypeList;
   const typeList = props.typeList;
+  const subTypeList = props.subTypeList;
 
   // State related to pagination 
   // reference: https://www.npmjs.com/package/react-hooks-paginator
