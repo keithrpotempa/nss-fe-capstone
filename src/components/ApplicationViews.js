@@ -112,6 +112,7 @@ const ApplicationViews = props => {
         />
       }}/>
       <Route 
+        exact
         path="/characters/new"
         render={props => {
           if (hasUser) {
@@ -121,7 +122,12 @@ const ApplicationViews = props => {
           }
         }}
       />
-      <Route
+      {/* 
+        FIXME: This is also rendering when making new characters
+        due to the :characterId no longer having strict integers
+        and thus matching the above route
+       */}
+      {/* <Route
         exact
         path="/characters/:characterId"
         render={props => {
@@ -134,7 +140,7 @@ const ApplicationViews = props => {
             {...props} 
           />;
         }}
-      />
+      /> */}
       <Route
         path="/characters/:characterId/edit"
         render={props => {

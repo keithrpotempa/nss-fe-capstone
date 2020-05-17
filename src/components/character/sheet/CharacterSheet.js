@@ -11,12 +11,16 @@ import CharacterSheetMunger from "./CharacterSheetMunger"
 // It is used by the character sheet view (detail route)
 // but not in the review stage of the character creation process
 
+// TODO: possibly can be merged back with munger 
+// now that skill list and stunt list have been lifted 
+
 const CharacterSheet = props => {
+  const skillList = props.skillList;
+  const stuntList = props.stuntList;
+  
   const [character, setCharacter] = useState({});
   const [characterSubType, setCharacterSubType] = useState({});
   const [characterAspects, setCharacterAspects] = useState([]);
-  const [skillList, setSkillList] = useState([]);
-  const [stuntList, setStuntList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   
   const activeUser = JSON.parse(sessionStorage.getItem("credentials"));
@@ -34,19 +38,6 @@ const CharacterSheet = props => {
   const getCharacterAspects = () => {
     return ApiManager.getCharacterAttributes("characterAspects", id)
       .then(aspects => setCharacterAspects(ApiManager.arrayify(aspects)));
-  }
-
-  const getSkillList = () => {
-    return ApiManager.getAll("skills")
-      .then(skills => {
-        console.log("response", skills)
-        setSkillList(skills)
-      })
-  }
-
-  const getStuntList = () => {
-    ApiManager.getAll("stunts")
-      .then(setStuntList)
   }
 
   const handleDelete = (id) => {
@@ -70,8 +61,6 @@ const CharacterSheet = props => {
   useEffect(()=>{
     getCharacter();
     getCharacterAspects();
-    getSkillList();
-    getStuntList();
     setIsLoading(false);
   }, [])
 

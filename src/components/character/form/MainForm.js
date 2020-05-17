@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Button, Container, Divider, Grid } from "semantic-ui-react";
 import { confirmAlert } from 'react-confirm-alert';
 import "../Character.css";
-import ApiManager from "../../../modules/ApiManager";
 import AspectForm from "./AspectsForm";
 import SkillsForm from "./SkillsForm";
 import StuntsForm from "./StuntsForm";
@@ -14,11 +13,12 @@ import EditCharacter from "./EditCharacter";
 
 const MainForm = props => {
   /* ------------------ STATES ------------------*/
+  const skillList = props.skillList;
+  const stuntList = props.stuntList;
+
   const [isLoading, setIsLoading] = useState(true);
   const [step, setStep] = useState(1);
 
-  const [skillList, setSkillList] = useState([]);
-  const [stuntList, setStuntList] = useState([]);
 
   const [character, setCharacter] = useState({name: "", type: "", subtype: ""});
   const [characterSubTypeDetails, setCharacterSubTypeDetails] = useState();
@@ -77,20 +77,6 @@ const MainForm = props => {
       2: "",
       1: ""
     })
-  }
-
-  /* ------------------ GETS & STATE SETS  ------------------*/
-  const getSkillList = () => {
-    return ApiManager.getAll("skills")
-      .then(setSkillList);      
-  }
-
-  const getStuntList = () => {
-    return ApiManager.getAll("stunts")
-      /* Sorting stunts alphabetically
-        https://stackoverflow.com/a/45544166*/
-      .then(stuntList => stuntList.sort((a, b) => a.name.localeCompare(b.name) ))
-      .then(setStuntList); 
   }
 
   /* ------------------ EVENT HANDLERS  ------------------*/
@@ -251,7 +237,6 @@ const MainForm = props => {
       case 3: 
         return <SkillsForm 
           skillList={skillList}
-          setSkillList={setSkillList}
           characterSkills={characterSkills}
           setCharacterSkills={setCharacterSkills}
           maxSkillRating={characterSubTypeDetails.maxSkillRating}
@@ -265,7 +250,6 @@ const MainForm = props => {
           setCharacterStunts={setCharacterStunts}
           skillList={skillList}
           stuntList={stuntList}
-          setStuntList={setStuntList}
           type={characterSubTypeDetails.name}
           maxStunts={characterSubTypeDetails.maxStunts}
           stuntComment={characterSubTypeDetails.stuntComment}
@@ -287,8 +271,6 @@ const MainForm = props => {
   }
 
   useEffect(() => {
-    getSkillList();
-    getStuntList();
     setIsLoading(false);
   }, [])
 
