@@ -116,7 +116,13 @@ const ApplicationViews = props => {
         path="/characters/new"
         render={props => {
           if (hasUser) {
-            return <MainForm {...props} />;
+            return <MainForm 
+            characterTypeList={characterTypeList} 
+            characterSubTypeList={characterSubTypeList}
+            skillList={skillList}
+            stuntList={stuntList}
+            {...props} 
+          />;
           } else {
             return <Redirect to="/login" />;
           }

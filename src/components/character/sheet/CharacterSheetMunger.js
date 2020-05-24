@@ -39,7 +39,6 @@ const CharacterSheetMunger = props => {
   const getCharacterSkills = () => {
     ApiManager.getCharacterAttributes("characterSkills", id)
       .then(rawSkills => {
-        rawSkills = ApiManager.arrayify(rawSkills)
         // Before the skills are sorted into a weird format to output
         // we extract the rating of will and physique to use later
         // If they don't have a rating, consider it to be zero
@@ -81,7 +80,6 @@ const CharacterSheetMunger = props => {
   const getCharacterStunts = () => {
     ApiManager.getCharacterAttributes("characterStunts", id)
       .then(stunts => {
-        const stuntArray = ApiManager.arrayify(stunts);
         let formattedStunts = [];
         // To keep this from crashing if stuntList hasn't loaded yet...
         if (stuntList.length > 0) {

@@ -10,6 +10,11 @@ import ApiManager from "../../../modules/ApiManager";
 */
 
 const EditCharacter = props => {
+  const skillList = props.skillList;
+  const stuntList = props.stuntList;
+  const characterTypeList = props.characterTypeList;
+  const characterSubTypeList = props.characterSubTypeList;
+
   const characterId = props.characterId;
   const setCharacter = props.setCharacter;
   const setCharacterSubTypeDetails = props.setCharacterSubTypeDetails;
@@ -26,25 +31,45 @@ const EditCharacter = props => {
   const setIsLoading = props.setIsLoading;
 
   const editSetup = () => {
-    // Get all of the characters' data and put it in state
-    ApiManager.getCharacterWithType(characterId)
-      .then(character => setCharacterToEdit(character))
-    ApiManager.getCharacterAspects(characterId)
-      .then(aspects => setAspectsToEdit(aspects))
-    ApiManager.getCharacterSkills(characterId)
-      .then(skills => setSkillsToEdit(skills))
-    ApiManager.getCharacterStunts(characterId)
-      .then(stunts => setStuntsToEdit(stunts))
-      .then(() => setIsLoading(false))
+    ApiManager.get("characters", characterId)
+      .then(setCharacterToEdit)
+    ApiManager.getCharacterAttributes("characterAspects", characterId)
+      .then(setAspectsToEdit)
+
   }
+  
+  // PRE FIREBASE
+  // const editSetup = () => {
+  //   // Get all of the characters' data and put it in state
+  //   ApiManager.getCharacterWithType(characterId)
+  //     .then(character => setCharacterToEdit(character))
+  //   ApiManager.getCharacterAspects(characterId)
+  //     .then(aspects => setAspectsToEdit(aspects))
+  //   ApiManager.getCharacterSkills(characterId)
+  //     .then(skills => setSkillsToEdit(skills))
+  //   ApiManager.getCharacterStunts(characterId)
+  //     .then(stunts => setStuntsToEdit(stunts))
+  //     .then(() => setIsLoading(false))
+  // }
 
   const setCharacterToEdit = (character) => {
-    const subtype = character.characterSubTypeId;
-    const type = character.characterSubType.characterTypeId;
+    console.log("character retrieved", character)
+    const subtypeId = character.characterSubTypeId;
+    let typeId = 0
+    if (characterSubTypeList.length > 0) {
+      console.log("characterSubTypeList", characterSubTypeList)
+      typeId = characterSubTypeList
+        // Filtering the subtype list to get 
+        // the correct subtype by the id on the character
+        // and getting the characterTypeId associated with that subtype
+        .filter(subType => subType.id === subtypeId)[0].characterTypeId
+    }
+    // TODO: I don't like that the type and subtype are strings...
+    // Fix this elsewhere so they don't have to be
     const characterToEdit = {
       name: character.name, 
-      type: `${type}`, 
-      subtype: `${subtype}`,
+      type: `${typeId}`, 
+      subtype: `${subtypeId}`,
       created: character.created,
       id: characterId
     }
@@ -53,15 +78,18 @@ const EditCharacter = props => {
   }
   
   const setAspectsToEdit = (aspects) => {
-    const stateToChange = [...characterAspects];
-    // TODO: Make this loop more adaptable to different range of rating levels
-    for (let i = 0; i < 7; i++) {
-      const aspect = aspects[i]
-      if (aspect) {
-        stateToChange[i] = {name: aspect.name, aspectTypeId: aspect.aspectTypeId}
-      }
-    } 
-    setCharacterAspects(stateToChange)
+    console.log("aspects", aspects)
+    if (aspects.length > 0) {
+      const stateToChange = [...characterAspects];
+      // TODO: Make this loop more adaptable to different range of rating levels
+      for (let i = 0; i < 7; i++) {
+        const aspect = aspects[i]
+        if (aspect) {
+          stateToChange[i] = {name: aspect.name, aspectTypeId: aspect.aspectTypeId}
+        }
+      } 
+      setCharacterAspects(stateToChange)
+    }
   }
 
   const setSkillsToEdit = (skills) => {
@@ -93,7 +121,7 @@ const EditCharacter = props => {
 
   useEffect(() => {
     editSetup();
-  }, [])
+  }, [characterSubTypeList])
 
   return (
     <>

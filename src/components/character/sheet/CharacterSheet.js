@@ -37,7 +37,6 @@ const CharacterSheet = props => {
 
   const getCharacterAspects = () => {
     return ApiManager.getCharacterAttributes("characterAspects", id)
-      .then(aspects => setCharacterAspects(ApiManager.arrayify(aspects)));
   }
 
   const handleDelete = (id) => {

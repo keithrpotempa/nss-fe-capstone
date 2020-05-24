@@ -15,6 +15,8 @@ const MainForm = props => {
   /* ------------------ STATES ------------------*/
   const skillList = props.skillList;
   const stuntList = props.stuntList;
+  const characterTypeList = props.characterTypeList;
+  const characterSubTypeList = props.characterSubTypeList;
 
   const [isLoading, setIsLoading] = useState(true);
   const [step, setStep] = useState(1);
@@ -291,6 +293,10 @@ const MainForm = props => {
             setCharacterStunts={setCharacterStunts}
             setIsLoading={setIsLoading}
             setCharacterSubTypeDetails={setCharacterSubTypeDetails}
+            skillList = {skillList}
+            stuntList = {stuntList}
+            characterTypeList = {characterTypeList}
+            characterSubTypeList = {characterSubTypeList}
           />
           : <></>
         }

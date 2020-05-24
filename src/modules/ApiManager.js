@@ -1,6 +1,6 @@
 import firebase from '../firebase'
 
-const jsonURL = "https://fate-character-codex.firebaseio.com";
+const fbUrl = "https://fate-character-codex.firebaseio.com";
 const localURL = "http://localhost:5002"
 
 export default {
@@ -25,11 +25,12 @@ export default {
     // https://stackoverflow.com/questions/38768576/in-firebase-when-using-push-how-do-i-get-the-unique-id-and-store-in-my-databas/38776788
   },
   getCharacterAttributes(characterAttribute, characterId) {
-    return fetch(`${jsonURL}/${characterAttribute}/.json?orderBy="characterId"&equalTo="${characterId}"`)
-      .then(result => result.json());
+    return fetch(`${fbUrl}/${characterAttribute}/.json?orderBy="characterId"&equalTo="${characterId}"`)
+      .then(result => result.json())
+      .then(this.arrayify);
   },
   getHighConcept(characterId) {
-    return fetch(`${jsonURL}/characterAspects/.json?orderBy="characterId"&equalTo="${characterId}"`)
+    return fetch(`${fbUrl}/characterAspects/.json?orderBy="characterId"&equalTo="${characterId}"`)
       .then(result => result.json())
       .then(this.arrayify)
       .then(aspects => aspects.filter(aspect => aspect.aspectTypeId === 0)[0].name)
@@ -49,11 +50,11 @@ export default {
     return array
   },
   get(dataType, id) {
-    return fetch(`${jsonURL}/${dataType}/${id}.json`)
+    return fetch(`${fbUrl}/${dataType}/${id}.json`)
       .then(result => result.json());
   },
   getAll(dataType) {
-    return fetch(`${jsonURL}/${dataType}/.json`)
+    return fetch(`${fbUrl}/${dataType}/.json`)
       .then(result => result.json());
   },
   // ---------------- JSON SERVER ----------------
@@ -64,19 +65,19 @@ export default {
   },
   // TODO: Convert to Firebase approach
   delete(dataType, id) {
-    return fetch(`${jsonURL}/${dataType}/${id}`, {
+    return fetch(`${fbUrl}/${dataType}/${id}`, {
       method: "DELETE"
     }).then(result => result.json());
   },
   // TODO: Convert to Firebase approach
   deleteByCharacterId(dataType, charId) {
-    return fetch(`${jsonURL}/${dataType}?characterId=${charId}`, {
+    return fetch(`${fbUrl}/${dataType}?characterId=${charId}`, {
       method: "DELETE"
     }).then(result => result.json());
   },
   // TODO: Convert to Firebase approach
   post(dataType, objectToPost) {
-    return fetch(`${jsonURL}/${dataType}`, {
+    return fetch(`${fbUrl}/${dataType}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -86,7 +87,7 @@ export default {
   },
     // TODO: Convert to Firebase approach
   update(dataType, objectToEdit) {
-    return fetch(`${jsonURL}/${dataType}/${objectToEdit.id}`, {
+    return fetch(`${fbUrl}/${dataType}/${objectToEdit.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json"
