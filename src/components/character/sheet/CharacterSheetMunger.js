@@ -85,7 +85,7 @@ const CharacterSheetMunger = props => {
         if (stuntList.length > 0) {
           // Map a new array with the actual names of the stunts,
           // found by matching the fk id from characterStunts and the stunt list
-          formattedStunts = stuntArray.map(stunt => stuntList[stunt.stuntId])
+          formattedStunts = stunts.map(stunt => stuntList[stunt.stuntId])
         }
         setCharacterStunts(formattedStunts)
       });

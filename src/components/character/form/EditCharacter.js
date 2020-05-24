@@ -10,9 +10,6 @@ import ApiManager from "../../../modules/ApiManager";
 */
 
 const EditCharacter = props => {
-  const skillList = props.skillList;
-  const stuntList = props.stuntList;
-  const characterTypeList = props.characterTypeList;
   const characterSubTypeList = props.characterSubTypeList;
 
   const characterId = props.characterId;
@@ -35,34 +32,26 @@ const EditCharacter = props => {
       .then(setCharacterToEdit)
     ApiManager.getCharacterAttributes("characterAspects", characterId)
       .then(setAspectsToEdit)
-
+    ApiManager.getCharacterAttributes("characterSkills", characterId)
+      .then(setSkillsToEdit)
+    ApiManager.getCharacterAttributes("characterStunts", characterId)
+      .then(setStuntsToEdit)
+      .then(() => setIsLoading(false))
   }
   
-  // PRE FIREBASE
-  // const editSetup = () => {
-  //   // Get all of the characters' data and put it in state
-  //   ApiManager.getCharacterWithType(characterId)
-  //     .then(character => setCharacterToEdit(character))
-  //   ApiManager.getCharacterAspects(characterId)
-  //     .then(aspects => setAspectsToEdit(aspects))
-  //   ApiManager.getCharacterSkills(characterId)
-  //     .then(skills => setSkillsToEdit(skills))
-  //   ApiManager.getCharacterStunts(characterId)
-  //     .then(stunts => setStuntsToEdit(stunts))
-  //     .then(() => setIsLoading(false))
-  // }
-
   const setCharacterToEdit = (character) => {
-    console.log("character retrieved", character)
     const subtypeId = character.characterSubTypeId;
     let typeId = 0
     if (characterSubTypeList.length > 0) {
-      console.log("characterSubTypeList", characterSubTypeList)
-      typeId = characterSubTypeList
+      // Subtype variable is the whole subtype object:
+      const subtype = characterSubTypeList
         // Filtering the subtype list to get 
         // the correct subtype by the id on the character
-        // and getting the characterTypeId associated with that subtype
-        .filter(subType => subType.id === subtypeId)[0].characterTypeId
+        .filter(subType => subType.id === subtypeId)[0]
+      // Associated typeId is retrieved from the subtype object
+      typeId = subtype.characterTypeId
+      // And set in state
+      setCharacterSubTypeDetails(subtype);
     }
     // TODO: I don't like that the type and subtype are strings...
     // Fix this elsewhere so they don't have to be
@@ -74,11 +63,10 @@ const EditCharacter = props => {
       id: characterId
     }
     setCharacter(characterToEdit);
-    setCharacterSubTypeDetails(character.characterSubType);
+
   }
   
   const setAspectsToEdit = (aspects) => {
-    console.log("aspects", aspects)
     if (aspects.length > 0) {
       const stateToChange = [...characterAspects];
       // TODO: Make this loop more adaptable to different range of rating levels

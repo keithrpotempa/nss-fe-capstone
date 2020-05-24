@@ -293,9 +293,6 @@ const MainForm = props => {
             setCharacterStunts={setCharacterStunts}
             setIsLoading={setIsLoading}
             setCharacterSubTypeDetails={setCharacterSubTypeDetails}
-            skillList = {skillList}
-            stuntList = {stuntList}
-            characterTypeList = {characterTypeList}
             characterSubTypeList = {characterSubTypeList}
           />
           : <></>

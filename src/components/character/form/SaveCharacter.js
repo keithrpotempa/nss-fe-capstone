@@ -158,11 +158,11 @@ const SaveCharacter = props => {
   }
 
   const saveCharacter = (char) => {
-    if (isEdit) {
-      // FIXME: TO BUILD
-    } else {
+    // if (isEdit) {
+    //   // FIXME: TO BUILD
+    // } else {
       ApiManager.update('characters', char.id, char)
-    }
+    // }
     return char
   }
 
