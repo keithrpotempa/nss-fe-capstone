@@ -12,6 +12,9 @@ export default {
 
     // Reference:
     //https://firebase.google.com/docs/database/web/read-and-write#updating_or_deleting_data
+    console.log("datatype", dataType)
+    console.log("key", key)
+    console.log("objectToPush", objectToPush)
     const updates = {}
     updates[`/${dataType}/${key}`] = objectToPush
     return firebase.database().ref().update(updates)

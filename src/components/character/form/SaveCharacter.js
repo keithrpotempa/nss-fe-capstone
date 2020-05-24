@@ -26,7 +26,7 @@ const SaveCharacter = props => {
       modified: new Date().toLocaleString()
     }
     if (isEdit) {
-      characterToSave.id = parseInt(props.match.params.characterId);
+      characterToSave.id = props.match.params.characterId;
       characterToSave.created = character.created
     }
     else {
@@ -47,19 +47,17 @@ const SaveCharacter = props => {
 
   const constructSkill = (skill, rating, characterId) => {
     const skillToSave = {
-      // NOTE: parseInt removed from these since Firebase uses alphanumeric keys
       characterId: characterId,
-      skillId: skill,
-      skillRating: rating
+      skillId: parseInt(skill),
+      skillRating: parseInt(rating)
     }
     return skillToSave;
   }
 
   const constructStunt = (stuntId, characterId) => {
     const stuntToSave = {
-      // NOTE: parseInt removed from these since Firebase uses alphanumeric keys
       characterId: characterId,
-      stuntId: stuntId,
+      stuntId: parseInt(stuntId),
     }
     return stuntToSave;
   } 
